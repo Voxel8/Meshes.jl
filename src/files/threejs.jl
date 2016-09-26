@@ -3,9 +3,9 @@
 import JSON
 export exportThreejs, importThreejs
 
-import Base.writemime
+import Base.show
 
-function exportThreejs(msh::Mesh, fn::AbstractString)
+function exportThreejs(msh::Mesh, fn::String)
          exportThreejs(msh, open(fn, "w"))
 end
 
@@ -38,7 +38,7 @@ end
 
 exportThreejs(msh::Mesh, str::IO) = exportThreejs(msh, str, true)
 
-function writemime(io::IO, ::MIME"model/threejs", msh::Mesh)
+function show(::MIME"model/threejs", io::IO, msh::Mesh)
     exportSTL(msh, io)
 end
 
@@ -61,7 +61,7 @@ function writemime(io::IO, ::MIME"text/html", msh::Mesh)
     """)
 end
 
-function importThreejs( fn::AbstractString)
+function importThreejs( fn::String)
 
     json = JSON.parsefile( fn )
 

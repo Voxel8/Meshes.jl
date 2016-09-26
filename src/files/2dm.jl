@@ -1,21 +1,21 @@
 export import2dm,
        export2dm
+       
+import Base.show
 
-import Base.writemime
-
-function import2dm(file::AbstractString)
+function import2dm(file::String)
     con = open(file, "r")
     mesh = import2dm(con)
     close(con)
     return mesh
 end
 
-parseNode(w::Array{AbstractString}) = Vertex(parse(Float64, w[3]), parse(Float64, w[4]), parse(Float64, w[5]))
+parseNode(w::Array{String}) = Vertex(parse(Float64, w[3]), parse(Float64, w[4]), parse(Float64, w[5]))
 
-parseTriangle(w::Array{AbstractString}) = Face{Int}(parse(Int, w[3]), parse(Int, w[4]), parse(Int, w[5]))
+parseTriangle(w::Array{String}) = Face{Int}(parse(Int, w[3]), parse(Int, w[4]), parse(Int, w[5]))
 
 # Qudrilateral faces are split up into triangles
-function parseQuad(w::Array{AbstractString})
+function parseQuad(w::Array{String})
     w[7] = w[3]                     # making a circle
     Face{Int}[Face{Int}(w[i], w[i+1], w[i+2]) for i = [3,5]]
 end
@@ -59,12 +59,12 @@ function export2dm(con::IO,m::Mesh)
     nothing
 end
 
-function writemime(io::IO, ::MIME"model/2dm", mesh::Mesh)
+function show(::MIME"model/2dm", io::IO, mesh::Mesh)
     export2dm(io, mesh)
 end
 
 # | Write a @Mesh@ to file in SMS-.2dm-file-format
-function exportTo2dm(f::AbstractString,m::Mesh)
+function exportTo2dm(f::String,m::Mesh)
     con = open(f, "w")
     export2dm(con, m)
     close(con)
